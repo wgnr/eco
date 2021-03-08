@@ -1,0 +1,186 @@
+{
+	"info": {
+		"_postman_id": "862ee05b-a5e3-4363-bb9e-4312243cf739",
+		"name": "eCommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/49702f00-e909-4ad6-bc65-fdd96b48e8a1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"49702f00-e909-4ad6-bc65-fdd96b48e8a1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/33b9f277-c80d-400a-982c-80f6c1ec9478",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"33b9f277-c80d-400a-982c-80f6c1ec9478"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\" : \"RMx11\",\r\n    \"description\" : \"Canilla\",\r\n    \"name\" : \"Canilla\",\r\n    \"price\" : 522,\r\n    \"stock\" : 10,\r\n    \"thumbnail\" : \"https:img.ru/ofskmas-55\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/products",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Get all product in cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/cart",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product in cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/cart/49702f00-e909-4ad6-bc65-fdd96b48e8a1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"cart",
+								"49702f00-e909-4ad6-bc65-fdd96b48e8a1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert product in cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/cart/49702f00-e909-4ad6-bc65-fdd96b48e8a1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"cart",
+								"49702f00-e909-4ad6-bc65-fdd96b48e8a1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete product in cart",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/cart/49702f00-e909-4ad6-bc65-fdd96b48e8a1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"cart",
+								"49702f00-e909-4ad6-bc65-fdd96b48e8a1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
