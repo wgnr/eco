@@ -7,7 +7,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", APIRouters);
 
-
+// import T from "./db/Products";
+// (async function a() {
+//   // console.log(await T.update("asdsa", { price: 5000 }));
+// })();
 app.use("*", (req: Request, res: Response) => {
   res.status(400).json({
     error: -2,

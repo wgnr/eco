@@ -14,33 +14,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteById = exports.update = exports.create = exports.getById = exports.getAll = void 0;
 const uuid_1 = require("uuid");
-const FilePersistence_1 = __importDefault(require("../db/FilePersistence"));
-const ProductList = new FilePersistence_1.default("ProductList.db");
+const Products_1 = __importDefault(require("../db/Products"));
+// import DBConnection from "../db/FilePersistence";
+// const ProductList = new DBConnection("ProductList.db");
 const products = [];
 const getAll = () => __awaiter(void 0, void 0, void 0, function* () {
-    const productList = yield ProductList.getAll();
+    const productList = (yield Products_1.default.getAll());
     return productList;
 });
 exports.getAll = getAll;
 const getById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const product = yield ProductList.getById(id);
+    const product = (yield Products_1.default.getById(id));
     return product;
 });
 exports.getById = getById;
 const create = (body) => __awaiter(void 0, void 0, void 0, function* () {
     const newProduct = Object.assign(Object.assign({}, body), { timestamp: new Date().toISOString(), id: uuid_1.v4() });
-    const createdProduct = yield ProductList.add(newProduct);
+    const createdProduct = (yield Products_1.default.add(newProduct));
     if (!createdProduct)
         throw new Error("Can't save product in DB");
     return createdProduct;
 });
 exports.create = create;
 const update = (id, body) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield ProductList.update(id, body);
+    return yield Products_1.default.update(id, body);
 });
 exports.update = update;
 const deleteById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(yield ProductList.delete(id)))
+    if (!(yield Products_1.default.delete(id)))
         throw new Error("Can't delete product");
     return;
 });

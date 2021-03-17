@@ -10,6 +10,10 @@ const PORT = process.env.port || 8080;
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/api", routers_1.default);
+// import T from "./db/Products";
+// (async function a() {
+//   // console.log(await T.update("asdsa", { price: 5000 }));
+// })();
 app.use("*", (req, res) => {
     res.status(400).json({
         error: -2,
