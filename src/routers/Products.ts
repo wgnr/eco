@@ -27,7 +27,7 @@ router.get(
     const id: string = req.params.id;
 
     try {
-      const product: Product = await ProductServices.getById(id);
+      const product: Product | null = await ProductServices.getById(id);
 
       return product
         ? res.json(product)

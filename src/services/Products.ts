@@ -1,18 +1,19 @@
 import { BaseProduct, Product } from "../Entities/Product.entity";
 import { v4 as uuidv4 } from "uuid";
-import DBConnection from "../db/FilePersistence";
-const ProductList = new DBConnection("ProductList.db");
 
-const products = [] as Product[];
+import { IProduct, Product as ProductModel } from "../models/Product";
+const hiddenFields = { _id: 0, __v: 0 };
 
 export const getAll = async (): Promise<Product[]> => {
-  const productList = await ProductList.getAll();
-  return productList;
+  const products: Array<IProduct> = await ProductModel.find({}, hiddenFields);
+  return products;
 };
 
-export const getById = async (id: string): Promise<Product> => {
-  const product: Product = await ProductList.getById(id);
-
+export const getById = async (id: string): Promise<Product | null> => {
+  const product: IProduct | null = await ProductModel.findOne(
+    { id },
+    hiddenFields
+  );
   return product;
 };
 
@@ -23,20 +24,18 @@ export const create = async (body: BaseProduct): Promise<Product> => {
     id: uuidv4(),
   };
 
-  const createdProduct = await ProductList.add(newProduct);
-  if (!createdProduct) throw new Error("Can't save product in DB");
-
+  const createdProduct = await ProductModel.create(newProduct);
   return createdProduct;
 };
 
 export const update = async (
   id: string,
   body: BaseProduct
-): Promise<Product | undefined> => {
-  return await ProductList.update(id, body);
+): Promise<Product | null> => {
+  return await ProductModel.findOneAndUpdate({ id }, { $set: { ...body } });
 };
 
 export const deleteById = async (id: string): Promise<undefined> => {
-  if (!(await ProductList.delete(id))) throw new Error("Can't delete product");
+  await ProductModel.findOneAndDelete({ id });
   return;
 };

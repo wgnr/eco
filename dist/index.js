@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const routers_1 = __importDefault(require("./routers"));
 const app = express_1.default();
 const PORT = process.env.port || 8080;
@@ -22,6 +23,17 @@ app.use(function (err, req, res, next) {
 });
 app
     .listen(PORT, () => {
-    console.log(`Server is running at https://localhost:${PORT}`);
+    console.log(`✔ Server is running at https://localhost:${PORT}`);
+    mongoose_1.default
+        .connect("mongodb://localhost/ecommerce", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+        .then((r) => console.log(`✔ Connected to DB`))
+        .catch((e) => {
+        console.error(`❌ Cannot connect to DB... exiting... `);
+        console.error(e);
+        process.exit();
+    });
 })
     .on("error", (error) => console.error(`Error in server!!!!!\n${error}`));
