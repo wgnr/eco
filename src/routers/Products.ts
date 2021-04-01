@@ -10,8 +10,10 @@ router.get(
   CheckIsUser,
   CheckIsAdmin,
   async (req: Request, res: Response) => {
+    const filters = req.body;
+
     try {
-      const allProducts: Product[] = await ProductServices.getAll();
+      const allProducts: Product[] = await ProductServices.getAll(filters);
       return res.json(allProducts);
     } catch (e) {
       return res.status(500).send(e.message);
