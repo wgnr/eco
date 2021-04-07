@@ -18,14 +18,21 @@ const auth_1 = require("../middlewares/auth");
 const index_1 = require("../services/index");
 exports.router = express_1.default.Router();
 exports.router.get("", auth_1.CheckIsUser, auth_1.CheckIsAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filters = req.body;
     try {
-        const allProducts = yield index_1.ProductServices.getAll();
+        const allProducts = yield index_1.ProductServices.getAll(filters);
         return res.json(allProducts);
     }
     catch (e) {
         return res.status(500).send(e.message);
     }
 }));
+exports.router.get("/vista-test", auth_1.CheckIsUser, auth_1.CheckIsAdmin, (req, res) => {
+    let cant = Math.abs(parseInt(req.query.cant));
+    if (isNaN(cant))
+        cant = 10;
+    return res.json(index_1.ProductServices.generateFakeProducts(cant));
+});
 exports.router.get("/:id", auth_1.CheckIsUser, auth_1.CheckIsAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {

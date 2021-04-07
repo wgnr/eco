@@ -22,6 +22,18 @@ router.get(
 );
 
 router.get(
+  "/vista-test",
+  CheckIsUser,
+  CheckIsAdmin,
+  (req: Request, res: Response) => {
+    let cant = Math.abs(parseInt(req.query.cant as string));
+    if (isNaN(cant)) cant = 10;
+
+    return res.json(ProductServices.generateFakeProducts(cant));
+  }
+);
+
+router.get(
   "/:id",
   CheckIsUser,
   CheckIsAdmin,

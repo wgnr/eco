@@ -1,5 +1,6 @@
 import { BaseProduct, Product } from "../Entities/Product.entity";
 import { v4 as uuidv4 } from "uuid";
+import Faker from "faker/locale/es";
 
 import { IProduct, Product as ProductModel } from "../models/Product";
 const hiddenFields = { _id: 0, __v: 0 };
@@ -82,3 +83,22 @@ interface NumberFiltering {
   lte?: Number;
   eq?: Number;
 }
+
+export const generateFakeProducts = (q: number = 10): Product[] => {
+  const productArray: Product[] = [];
+
+  let iterate = Math.abs(q);
+  while (iterate--)
+    productArray.push({
+      code: Faker.commerce.product(),
+      description: Faker.commerce.productDescription(),
+      id: Faker.datatype.uuid(),
+      name: Faker.commerce.productName(),
+      price: Number(Faker.commerce.price(10, 1000, 2)),
+      stock: Faker.datatype.number({ precision: 0, min: 0, max: 300 }),
+      thumbnail: Faker.image.fashion(),
+      timestamp: String(Faker.datatype.datetime(Number(new Date()))),
+    });
+
+  return productArray;
+};
