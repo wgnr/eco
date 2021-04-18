@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongo:
@@ -9,3 +9,15 @@ services:
     ports:
       - 27017:27017
     container_name: db_mongo
+
+  redis:
+    image: redis
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    # volumes: // TODO Donde guarda el backup redis?
+    #   - ./db_redis:/bitnami/redis/data
+    ports:
+      - 6379:6379
+    container_name: db_redis
