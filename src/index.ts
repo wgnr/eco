@@ -1,12 +1,24 @@
+import dotenv from "dotenv";
+dotenv.config();
+
+import path from "path";
+__dirname = path.resolve();
+
 import express, { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
+import session from "express-session";
+import { sessionConfig } from "./config";
 import APIRouters from "./routers";
+import { isLogged } from "./middlewares/auth";
 const app = express();
-const PORT = process.env.port || 8080;
+const PORT = process.env.SERVER_PORT || process.env.PORT || 8080;
 
+app.use(session(sessionConfig));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", APIRouters);
+app.use("/auth", express.static(`${__dirname}/public/auth`));
+app.use("/", isLogged, express.static(`${__dirname}/public`));
 
 app.use("*", (req: Request, res: Response) => {
   res.status(400).json({
