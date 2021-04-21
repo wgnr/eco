@@ -34,6 +34,6 @@ export const CheckIsUser = (
 };
 
 export const isLogged = (req: Request, res: Response, next: NextFunction) => {
-  if (req.session.isLogged) return next();
+  if (req.session!.isLogged) return next();
   res.redirect(301, "/auth/login");
 };

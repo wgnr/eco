@@ -19,3 +19,12 @@ export const sessionConfig: SessionOptions = {
   rolling: true,
   cookie: { maxAge: Number(process.env.SESSION_COOKIE_MAXAGE) || 60 },
 };
+
+
+// import session from 'express-session';
+
+// declare module 'express-session' {
+//   export interface SessionData {
+//     user: { [key: string]: any };
+//   }
+// }
