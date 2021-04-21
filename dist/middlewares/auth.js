@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CheckIsUser = exports.CheckIsAdmin = void 0;
+exports.isLogged = exports.CheckIsUser = exports.CheckIsAdmin = void 0;
 const CheckIsAdmin = (req, res, next) => {
     const isAdmin = true;
     if (!isAdmin)
@@ -23,3 +23,9 @@ const CheckIsUser = (req, res, next) => {
         return next();
 };
 exports.CheckIsUser = CheckIsUser;
+const isLogged = (req, res, next) => {
+    if (req.session.isLogged)
+        return next();
+    res.redirect(301, "/auth/login");
+};
+exports.isLogged = isLogged;

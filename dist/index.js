@@ -3,14 +3,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const path_1 = __importDefault(require("path"));
+__dirname = path_1.default.resolve();
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const express_session_1 = __importDefault(require("express-session"));
+const config_1 = require("./config");
 const routers_1 = __importDefault(require("./routers"));
+const auth_1 = require("./middlewares/auth");
 const app = express_1.default();
-const PORT = process.env.port || 8080;
+const PORT = process.env.SERVER_PORT || process.env.PORT || 8080;
+app.use(express_session_1.default(config_1.sessionConfig));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/api", routers_1.default);
+app.use("/auth", express_1.default.static(`${__dirname}/public/auth`));
+app.use("/", auth_1.isLogged, express_1.default.static(`${__dirname}/public`));
 app.use("*", (req, res) => {
     res.status(400).json({
         error: -2,
