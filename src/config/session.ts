@@ -15,16 +15,11 @@ export const sessionConfig: SessionOptions = {
   }),
   secret: process.env.SESSION_SECRET || "my-super-secrettASKLOjufdlaksjdklsaj",
   resave: true,
-  saveUninitialized: true,
+  saveUninitialized: false,
   rolling: true,
-  cookie: { maxAge: Number(process.env.SESSION_COOKIE_MAXAGE) || 60 },
+  cookie: {
+    httpOnly: false,
+    secure: false,
+    maxAge: Number(process.env.SESSION_COOKIE_MAXAGE) || 600000,
+  },
 };
-
-
-// import session from 'express-session';
-
-// declare module 'express-session' {
-//   export interface SessionData {
-//     user: { [key: string]: any };
-//   }
-// }

@@ -7,19 +7,29 @@ __dirname = path.resolve();
 import express, { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import session from "express-session";
+import passport from "passport";
+import cookieParser from "cookie-parser";
 import { sessionConfig } from "./config";
 import APIRouters from "./routers";
-import { isLogged } from "./middlewares/auth";
+import { checkIsAuthenticated } from "./middlewares/auth";
+
 const app = express();
 const PORT = process.env.SERVER_PORT || process.env.PORT || 8080;
 
-app.use(session(sessionConfig));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // Reads cookies req.cookies
+app.use(session(sessionConfig));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use("/api", APIRouters);
 app.use("/auth", express.static(`${__dirname}/public/auth`));
-app.use("/", isLogged, express.static(`${__dirname}/public`));
+app.use("/", checkIsAuthenticated, express.static(`${__dirname}/public`));
 
+// Default redirection...
+app.get("*", (req: Request, res: Response) => {
+  res.redirect("/");
+});
 app.use("*", (req: Request, res: Response) => {
   res.status(400).json({
     error: -2,
@@ -48,4 +58,7 @@ app
         process.exit();
       });
   })
-  .on("error", (error) => console.error(`Error in server!!!!!\n${error}`));
+  .on("error", (error) => {
+    console.error(`Error in server!!!!!\n${error}`);
+    process.exit(1);
+  });

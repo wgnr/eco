@@ -132,7 +132,7 @@
           .split(";")
           .reduce(
             (desiredCookie, currCookie) =>
-              currCookie.startsWith("user=")
+              currCookie.trim().startsWith("user=")
                 ? currCookie.split("=")[1]
                 : desiredCookie,
             ""

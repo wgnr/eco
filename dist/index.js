@@ -10,17 +10,26 @@ __dirname = path_1.default.resolve();
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const express_session_1 = __importDefault(require("express-session"));
+const passport_1 = __importDefault(require("passport"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const config_1 = require("./config");
 const routers_1 = __importDefault(require("./routers"));
 const auth_1 = require("./middlewares/auth");
 const app = express_1.default();
 const PORT = process.env.SERVER_PORT || process.env.PORT || 8080;
-app.use(express_session_1.default(config_1.sessionConfig));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+app.use(cookie_parser_1.default()); // Reads cookies req.cookies
+app.use(express_session_1.default(config_1.sessionConfig));
+app.use(passport_1.default.initialize());
+app.use(passport_1.default.session());
 app.use("/api", routers_1.default);
 app.use("/auth", express_1.default.static(`${__dirname}/public/auth`));
-app.use("/", auth_1.isLogged, express_1.default.static(`${__dirname}/public`));
+app.use("/", auth_1.checkIsAuthenticated, express_1.default.static(`${__dirname}/public`));
+// Default redirection...
+app.get("*", (req, res) => {
+    res.redirect("/");
+});
 app.use("*", (req, res) => {
     res.status(400).json({
         error: -2,
@@ -46,4 +55,7 @@ app
         process.exit();
     });
 })
-    .on("error", (error) => console.error(`Error in server!!!!!\n${error}`));
+    .on("error", (error) => {
+    console.error(`Error in server!!!!!\n${error}`);
+    process.exit(1);
+});
