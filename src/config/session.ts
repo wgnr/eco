@@ -4,6 +4,9 @@ import session from "express-session";
 import redis from "redis";
 
 const redisClient = redis.createClient();
+redisClient.on("error", function (error) {
+  console.error(error);
+});
 const RedisStorage = connectRedis(session);
 
 export const sessionConfig: SessionOptions = {

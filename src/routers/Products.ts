@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { CheckIsAdmin, CheckIsUser } from "../middlewares/auth";
+import { CheckIsAdmin, CheckIsUser } from "../auth";
 import { ProductServices } from "../services/index";
 import { BaseProduct, Product } from "../Entities/Product.entity";
 

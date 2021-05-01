@@ -1,47 +1,11 @@
-/*
-More info about passport
-https://github.com/jwalton/passport-api-docs
-*/
-import { Request, Response, NextFunction } from "express";
-import bCrypt from "bcryptjs";
-import { Error } from "mongoose";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { IUsers, IMUsers, User } from "../models/User/Users";
-import { UserCreateDTO } from "../models/User/User.create-dto";
+import { IUsers, IMUsers, User } from "../../models/User/Users";
+import { UserCreateDTO } from "../../models/User/User.create-dto";
+import bCrypt from "bcryptjs";
 
-export const CheckIsAdmin = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const isAdmin = true;
-
-  if (!isAdmin)
-    return res.status(403).json({
-      error: -1,
-      description: `You are not authorized for the path ${req.originalUrl}`,
-    });
-
-  return next();
-};
-
-export const CheckIsUser = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const isUser = true;
-
-  if (!isUser)
-    return res.status(403).json({
-      error: -1,
-      description: `You are not authorized for the path ${req.originalUrl}`,
-    });
-
-  res.locals.userId = "USER-ID";
-  if (isUser) return next();
-};
+const isValidPassword = (password: string, hashUserPassword: string) =>
+  bCrypt.compareSync(password, hashUserPassword);
 
 passport.use(
   "login",
@@ -105,32 +69,3 @@ passport.use(
     }
   )
 );
-
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-
-passport.deserializeUser((_id: string, done) => {
-  User.findById(_id, (err: Error, user: IMUsers) => done(err, user));
-});
-
-const isValidPassword = (password: string, hashUserPassword: string) =>
-  bCrypt.compareSync(password, hashUserPassword);
-
-export const checkIsAuthenticated = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  return req.isAuthenticated() ? next() : res.redirect("/auth/login.html");
-};
-
-export const checkIsAuthenticatedAPI = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  return req.isAuthenticated()
-    ? next()
-    : res.status(400).send("you have to login");
-};

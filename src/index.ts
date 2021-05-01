@@ -4,16 +4,16 @@ dotenv.config();
 import path from "path";
 __dirname = path.resolve();
 
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction, Application } from "express";
 import mongoose from "mongoose";
 import session from "express-session";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 import { sessionConfig } from "./config";
 import APIRouters from "./routers";
-import { checkIsAuthenticated } from "./middlewares/auth";
+import { checkIsAuthenticated } from "./auth/index";
 
-const app = express();
+const app: Application = express();
 const PORT = process.env.SERVER_PORT || process.env.PORT || 8080;
 
 app.use(express.json());
