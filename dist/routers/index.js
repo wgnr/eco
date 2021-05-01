@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const Products_1 = require("./Products");
 const Cart_1 = require("./Cart");
 const Auth_1 = require("./Auth");
-const auth_1 = require("../middlewares/auth");
+const auth_1 = require("../auth");
 const routers = express_1.default.Router();
 routers.use("/products", auth_1.checkIsAuthenticatedAPI, Products_1.router);
 routers.use("/cart", auth_1.checkIsAuthenticatedAPI, Cart_1.router);

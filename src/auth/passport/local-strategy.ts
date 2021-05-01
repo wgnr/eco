@@ -21,7 +21,7 @@ passport.use(
           return done(null, false);
         }
 
-        if (!isValidPassword(password, user.password)) {
+        if (!isValidPassword(password, user.password!)) {
           console.log(`Invalid password for ${email}`);
           req.logOut();
           return done(null, false);

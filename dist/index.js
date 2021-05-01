@@ -14,7 +14,7 @@ const passport_1 = __importDefault(require("passport"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const config_1 = require("./config");
 const routers_1 = __importDefault(require("./routers"));
-const auth_1 = require("./middlewares/auth");
+const index_1 = require("./auth/index");
 const app = express_1.default();
 const PORT = process.env.SERVER_PORT || process.env.PORT || 8080;
 app.use(express_1.default.json());
@@ -25,7 +25,7 @@ app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use("/api", routers_1.default);
 app.use("/auth", express_1.default.static(`${__dirname}/public/auth`));
-app.use("/", auth_1.checkIsAuthenticated, express_1.default.static(`${__dirname}/public`));
+app.use("/", index_1.checkIsAuthenticated, express_1.default.static(`${__dirname}/public`));
 // Default redirection...
 app.get("*", (req, res) => {
     res.redirect("/");

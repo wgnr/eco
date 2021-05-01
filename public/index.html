@@ -14,6 +14,12 @@
     />
   </head>
   <body>
+    <script type="text/javascript">
+      // Remove #_=_ by facebook
+      if (window.location.hash && window.location.hash == "#_=_") {
+        window.location.hash = "";
+      }
+    </script>
     <div class="container">
       <div class="logged"></div>
 
@@ -133,7 +139,7 @@
           .reduce(
             (desiredCookie, currCookie) =>
               currCookie.trim().startsWith("user=")
-                ? currCookie.split("=")[1]
+                ? decodeURIComponent(currCookie.split("=")[1])
                 : desiredCookie,
             ""
           );
@@ -150,6 +156,26 @@
         </form>
           `;
         }
+
+        fetch("/api/auth/me")
+          .then((r) => r.json())
+          .then((r) => {
+            if (userName && r.email) {
+              document.querySelector("div.logged").innerHTML = `
+          <form
+          action="/api/auth/logout"
+          method="post"
+          class="form-group form-auth"
+          >
+          <img src="${r.photo}" alt="user picture">
+          <h2>Bienvenido ${userName}</h2>
+          <h2>(${r.email})</h2>
+          <input type="submit" value="logout" class="btn btn-primary" />
+        </form>
+          `;
+            }
+          })
+          .catch((e) => console.log(e));
       </script>
 
       <script src="/socket.io/socket.io.js"></script>

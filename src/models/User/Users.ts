@@ -3,19 +3,23 @@ import { model, Schema, Model, Document } from "mongoose";
 const UsersCollection = "users";
 
 export interface IUsers {
+  email?: string;
   firstname?: string;
   lastname?: string;
-  email: string;
-  password: string;
+  password?: string;
+  photo?: string;
+  social?: object;
 }
 
 export interface IMUsers extends Document, IUsers {}
 
 const UsersSchema: Schema = new Schema({
+  email: { type: String },
   firstname: { type: String },
   lastname: { type: String },
-  email: { type: String, require: true },
-  password: { type: String, require: true },
+  password: { type: String },
+  photo: { type: String },
+  social: { type: Object },
 });
 
 export const User: Model<IMUsers> = model(UsersCollection, UsersSchema);

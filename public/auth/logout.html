@@ -24,7 +24,7 @@
       .reduce(
         (desiredCookie, currCookie) =>
           currCookie.startsWith("user=")
-            ? currCookie.split("=")[1]
+            ? decodeURIComponent(currCookie.split("=")[1])
             : desiredCookie,
         ""
       );

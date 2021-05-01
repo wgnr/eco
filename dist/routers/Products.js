@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.router = void 0;
 const express_1 = __importDefault(require("express"));
-const auth_1 = require("../middlewares/auth");
+const auth_1 = require("../auth");
 const index_1 = require("../services/index");
 exports.router = express_1.default.Router();
 exports.router.get("", auth_1.CheckIsUser, auth_1.CheckIsAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

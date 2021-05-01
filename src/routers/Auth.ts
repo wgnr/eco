@@ -5,7 +5,11 @@ import { UserGetDTO } from "../models/User/User.get-dto";
 const COOKIE_USERNAME_KEY = "user";
 export const router = express.Router();
 
-router.get("/login", (req: Request, res: Response) => {
+const commonLoginRedirect = (req: Request, res: Response) => {
+  res.cookie(COOKIE_USERNAME_KEY, req.user!.firstname?.trim()).redirect("/");
+};
+
+router.get("/me", (req: Request, res: Response) => {
   if (req.isAuthenticated()) {
     return res.json(new UserGetDTO(req.user));
   }
@@ -20,9 +24,7 @@ router.post(
     failureRedirect: "/auth/error-login.html",
     successMessage: true,
   }),
-  (req: Request, res: Response) => {
-    res.cookie(COOKIE_USERNAME_KEY, req.user!.firstname?.trim()).redirect("/");
-  }
+  commonLoginRedirect
 );
 
 router.post(
@@ -45,3 +47,18 @@ router.post("/logout", (req: Request, res: Response) => {
     res.redirect("/auth/logout.html");
   });
 });
+
+router.get(
+  "/facebook",
+  passport.authenticate("facebook", {
+    scope: ["email", "public_profile"],
+  })
+);
+
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", {
+    failureRedirect: "/auth/error-login.html",
+  }),
+  commonLoginRedirect
+);
