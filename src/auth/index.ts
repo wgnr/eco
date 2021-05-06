@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 // Active passport
 import "./passport";
+import "./JWT";
 
 export const CheckIsAdmin = (
   req: Request,
