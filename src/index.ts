@@ -14,7 +14,8 @@ import APIRouters from "./routers";
 import { checkIsAuthenticated } from "./auth/index";
 
 const app: Application = express();
-const PORT = process.env.SERVER_PORT || process.env.PORT || 8080;
+const PORT =
+  Number(process.env.SERVER_PORT) || Number(process.env.PORT) || 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -62,3 +63,7 @@ app
     console.error(`Error in server!!!!!\n${error}`);
     process.exit(1);
   });
+
+process.on("exit", (code) => {
+  console.log(`About to exit with code: ${code}`);
+});

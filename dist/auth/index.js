@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkIsAuthenticatedAPI = exports.checkIsAuthenticated = exports.CheckIsUser = exports.CheckIsAdmin = void 0;
 // Active passport
 require("./passport");
+require("./JWT");
 const CheckIsAdmin = (req, res, next) => {
     const isAdmin = true;
     if (!isAdmin)

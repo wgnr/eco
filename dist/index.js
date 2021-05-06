@@ -16,7 +16,7 @@ const config_1 = require("./config");
 const routers_1 = __importDefault(require("./routers"));
 const index_1 = require("./auth/index");
 const app = express_1.default();
-const PORT = process.env.SERVER_PORT || process.env.PORT || 8080;
+const PORT = Number(process.env.SERVER_PORT) || Number(process.env.PORT) || 8080;
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(cookie_parser_1.default()); // Reads cookies req.cookies
@@ -58,4 +58,7 @@ app
     .on("error", (error) => {
     console.error(`Error in server!!!!!\n${error}`);
     process.exit(1);
+});
+process.on("exit", (code) => {
+    console.log(`About to exit with code: ${code}`);
 });
