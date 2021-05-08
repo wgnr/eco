@@ -2,3 +2,4 @@ node_modules
 db
 db_redis
 .env
+dist
