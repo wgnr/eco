@@ -15,7 +15,10 @@ import { checkIsAuthenticated } from "./auth/index";
 
 const app: Application = express();
 const PORT =
-  Number(process.env.SERVER_PORT) || Number(process.env.PORT) || 8080;
+  parseInt(process.argv[2]) ||
+  Number(process.env.SERVER_PORT) ||
+  Number(process.env.PORT) ||
+  8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
