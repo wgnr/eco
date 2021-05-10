@@ -1,72 +1,21 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import path from "path";
-__dirname = path.resolve();
+import cluster from "cluster";
+import { cpus } from "os";
 
-import express, { Request, Response, NextFunction, Application } from "express";
-import mongoose from "mongoose";
-import session from "express-session";
-import passport from "passport";
-import cookieParser from "cookie-parser";
-import { sessionConfig } from "./config";
-import APIRouters from "./routers";
-import { checkIsAuthenticated } from "./auth/index";
+if (process.argv[3] == "CLUSTER" && cluster.isMaster) {
+  const CPUnum = cpus().length;
+  console.log(`CPU Threads: ${CPUnum}`);
+  console.log(`MASTER PID ${process.pid}`);
 
-const app: Application = express();
-const PORT =
-  parseInt(process.argv[2]) ||
-  Number(process.env.SERVER_PORT) ||
-  Number(process.env.PORT) ||
-  8080;
+  for (let i = 0; i < CPUnum; i++) {
+    cluster.fork();
+  }
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser()); // Reads cookies req.cookies
-app.use(session(sessionConfig));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use("/api", APIRouters);
-app.use("/auth", express.static(`${__dirname}/public/auth`));
-app.use("/", checkIsAuthenticated, express.static(`${__dirname}/public`));
-
-// Default redirection...
-app.get("*", (req: Request, res: Response) => {
-  res.redirect("/");
-});
-app.use("*", (req: Request, res: Response) => {
-  res.status(400).json({
-    error: -2,
-    description: `Path ${req.originalUrl} is not implemented.`,
+  cluster.on("exit", (worker) => {
+    console.log("Worker", worker.process.pid, "exited");
   });
-});
-
-app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
-});
-
-app
-  .listen(PORT, () => {
-    console.log(`✔ Server is running at https://localhost:${PORT}`);
-
-    mongoose
-      .connect("mongodb://localhost/ecommerce", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      })
-      .then((r) => console.log(`✔ Connected to DB`))
-      .catch((e) => {
-        console.error(`❌ Cannot connect to DB... exiting... `);
-        console.error(e);
-        process.exit();
-      });
-  })
-  .on("error", (error) => {
-    console.error(`Error in server!!!!!\n${error}`);
-    process.exit(1);
-  });
-
-process.on("exit", (code) => {
-  console.log(`About to exit with code: ${code}`);
-});
+} else {
+  import("./server");
+}

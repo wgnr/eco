@@ -13,9 +13,9 @@ router.get("", async (req: Request, res: Response) => {
 
   forkProcess.send(cant);
   forkProcess.on("message", (msg) => {
-    console.log(msg);
-    return res.json({
+    res.json({
       msg,
     });
+    forkProcess.kill();
   });
 });

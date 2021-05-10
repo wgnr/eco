@@ -9,7 +9,7 @@ echo 'remove provous PM2 process'
 npx pm2 delete all
 
 echo "serve fork"
-npx pm2 start ./dist/index.js --name="server_fork" -- 3000
+npx pm2 start ./dist/index.js --name="server_fork" --watch ./dist/ -- 8081 FORK
 
 echo "serve cluster"
-npx pm2 start ./dist/index.js --name="server_cluster" -i 1 -- 3001
+npx pm2 start ./dist/index.js --name="server_cluster" --watch ./dist/ -- 8082 CLUSTER
