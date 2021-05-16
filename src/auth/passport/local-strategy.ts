@@ -3,6 +3,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { IUsers, IMUsers, User } from "../../models/User/Users";
 import { UserCreateDTO } from "../../models/User/User.create-dto";
 import bCrypt from "bcryptjs";
+import { logger } from "../../utils/logger";
 
 const isValidPassword = (password: string, hashUserPassword: string) =>
   bCrypt.compareSync(password, hashUserPassword);
@@ -16,13 +17,13 @@ passport.use(
         if (err) return done(err);
 
         if (!user) {
-          console.log(`User not found with username ${email}`);
+          logger.logger.info(`User not found with username ${email}`);
           req.logOut();
           return done(null, false);
         }
 
         if (!isValidPassword(password, user.password!)) {
-          console.log(`Invalid password for ${email}`);
+          logger.logger.info(`Invalid password for ${email}`);
           req.logOut();
           return done(null, false);
         }
@@ -41,12 +42,12 @@ passport.use(
       process.nextTick(() => {
         User.findOne({ email }, (err: Error, user: IUsers) => {
           if (err) {
-            console.error("Error in signup", err);
+            logger.logger.error("Error in signup", err);
             return done(err);
           }
 
           if (user) {
-            console.error(`Email already exists`);
+            logger.logger.error(`Email already exists`);
             return done(null, false, { message: `${email} already exists` });
           }
 
@@ -57,11 +58,11 @@ passport.use(
 
           newUser.save((err) => {
             if (err) {
-              console.log(`error in saving email ${email}`);
+              logger.logger.info(`error in saving email ${email}`);
               throw err;
             }
 
-            console.log("User registration succesful");
+            logger.logger.info("User registration succesful");
             return done(null, newUser);
           });
         });

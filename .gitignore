@@ -1,5 +1,7 @@
-node_modules
+.env
 db
 db_redis
-.env
 dist
+logs
+node_modules
+TODO.md

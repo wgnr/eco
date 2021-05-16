@@ -6,6 +6,7 @@ import { router } from "../../routers/Auth";
 import { User, IMUsers, IUsers } from "../../models/User/Users";
 import { UserCreateDTO } from "../../models/User/User.create-dto";
 import { UserGetDTO } from "../../models/User/User.get-dto";
+import { logger } from "../../utils/logger";
 
 const generateToken = (user: IUsers) =>
   jwt.sign({ data: user }, tokenSecret, { expiresIn: "1s" });
@@ -51,7 +52,7 @@ router.post("/registerJWT", async (req: Request, res: Response) => {
 
   try {
     const user = await User.findOne({ email });
-    console.log(user);
+    logger.logger.info({ user });
 
     if (user) return res.status(409).json({ message: "Already exitst" });
 
@@ -61,7 +62,7 @@ router.post("/registerJWT", async (req: Request, res: Response) => {
 
     newUser.save((err, savedUser) => {
       if (err) {
-        console.log(`error in saving email ${email}`);
+        logger.logger.info(`error in saving email ${email}`);
         throw err;
       }
       res.status(200).json(generateTokenResponser(savedUser));

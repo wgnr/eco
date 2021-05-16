@@ -7,6 +7,7 @@ import {
 } from "passport-facebook";
 import { disposeEmitNodes } from "typescript";
 import { IUsers, IMUsers, User } from "../../models/User/Users";
+import { logger } from "../../utils/logger";
 
 passport.use(
   new FacebookStrategy(
@@ -17,12 +18,12 @@ passport.use(
       profileFields: ["id", "displayName", "first_name", "email", "photos"],
     },
     (accessToken, refreshToken, profile: Profile, done) => {
-      console.log("profile", profile);
+      logger.logger.info("profile", profile);
       User.findOne(
         { "social.facebook.id": profile.id },
         (err: Error, user: IUsers) => {
           if (err) {
-            console.error("Error in signup", err);
+            logger.logger.error("Error in signup", err);
             return done(err);
           }
 
@@ -41,11 +42,13 @@ passport.use(
 
             newUser.save((err) => {
               if (err) {
-                console.log(`error in saving new facebook user ${profile.id}`);
+                logger.logger.error(
+                  `error in saving new facebook user ${profile.id}`
+                );
                 throw err;
               }
 
-              console.log("User registration succesful");
+              logger.logger.info("User registration succesful");
               return done(null, newUser);
             });
           } else {

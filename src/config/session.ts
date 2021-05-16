@@ -2,10 +2,11 @@ import { SessionOptions } from "express-session";
 import connectRedis from "connect-redis";
 import session from "express-session";
 import redis from "redis";
+import { logger } from "../utils/logger";
 
 const redisClient = redis.createClient();
 redisClient.on("error", function (error) {
-  console.error(error);
+  logger.logger.error({ error });
 });
 const RedisStorage = connectRedis(session);
 

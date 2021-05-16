@@ -9,6 +9,8 @@ import cookieParser from "cookie-parser";
 import { sessionConfig } from "./config";
 import APIRouters from "./routers";
 import { checkIsAuthenticated } from "./auth/index";
+import compression from "compression";
+import { logger } from "./utils/logger";
 
 const app: Application = express();
 const PORT =
@@ -17,57 +19,50 @@ const PORT =
   Number(process.env.PORT) ||
   8080;
 
+logger.logger.info("Starting server...");
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser()); // Reads cookies req.cookies
+app.use(cookieParser());
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.url}`);
-  next();
-});
+app.use(logger);
 app.use("/api", APIRouters);
 app.use("/auth", express.static(`${__dirname}/public/auth`));
 app.use("/", checkIsAuthenticated, express.static(`${__dirname}/public`));
 
 // Default redirection...
 app.get("*", (req: Request, res: Response) => {
+  req.log.info("Invalid route was requested, redirecting to /");
   res.redirect("/");
-});
-app.use("*", (req: Request, res: Response) => {
-  res.status(400).json({
-    error: -2,
-    description: `Path ${req.originalUrl} is not implemented.`,
-  });
 });
 
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-  console.error(err.stack);
+  req.log.error("Am error has happened!");
   res.status(500).send("Something broke!");
 });
 
 app
   .listen(PORT, () => {
-    console.log(`✔ pid ${process.pid} is running at https://localhost:${PORT}`);
+    logger.logger.info(`✔ Server running at https://localhost:${PORT}`);
 
     mongoose
       .connect("mongodb://localhost/ecommerce", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       })
-      .then((r) => console.log(`✔ Connected to DB`))
+      .then((r) => logger.logger.info(`✔ Connected to DB`))
       .catch((e) => {
-        console.error(`❌ Cannot connect to DB... exiting... `);
-        console.error(e);
+        logger.logger.error(e, `❌ Cannot connect to DB... exiting... `);
         process.exit();
       });
   })
   .on("error", (error) => {
-    console.error(`Error in server!!!!!\n${error}`);
+    logger.logger.error(error, `Error in server!!!!!`);
     process.exit(1);
   });
 
 process.on("exit", (code) => {
-  console.log(`About to exit with code: ${code}`);
+  logger.logger.info(`About to exit with code: ${code}`);
 });
