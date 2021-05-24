@@ -8,7 +8,9 @@ const logFoler = join(__dirname, "..", "logs");
 if (!existsSync(logFoler)) mkdirSync(logFoler, { recursive: true });
 
 const intialStreams =
-  process.env.NODE_ENV !== "production" ? [{ stream: process.stdout }] : [];
+  process.env.NODE_ENV !== "production" && !process.env.PREVENT_CONSOLE_LOGGER
+    ? [{ stream: process.stdout }]
+    : [];
 
 export const logger = pinoHttp({
   logger: pinoms({

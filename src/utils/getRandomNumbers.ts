@@ -3,7 +3,7 @@ process.on("message", (n) => {
   process.send(calculate(n));
 });
 
-const calculate = (n: number) => {
+export const calculate = (n: number) => {
   const result: { [k: number]: number } = {};
   while (n--) {
     const val = Math.ceil(Math.random() * 1000);

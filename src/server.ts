@@ -13,11 +13,7 @@ import compression from "compression";
 import { logger } from "./utils/logger";
 
 const app: Application = express();
-const PORT =
-  parseInt(process.argv[2]) ||
-  Number(process.env.SERVER_PORT) ||
-  Number(process.env.PORT) ||
-  8080;
+const PORT = Number(process.env.PORT) || 8080;
 
 logger.logger.info("Starting server...");
 app.use(compression());
