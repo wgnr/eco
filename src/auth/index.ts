@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 
+// Active passport
+import "./passport";
+import "./JWT";
+
 export const CheckIsAdmin = (
   req: Request,
   res: Response,
@@ -31,4 +35,22 @@ export const CheckIsUser = (
 
   res.locals.userId = "USER-ID";
   if (isUser) return next();
+};
+
+export const checkIsAuthenticated = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  return req.isAuthenticated() ? next() : res.redirect("/auth/login.html");
+};
+
+export const checkIsAuthenticatedAPI = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  return req.isAuthenticated()
+    ? next()
+    : res.status(400).send("you have to login");
 };

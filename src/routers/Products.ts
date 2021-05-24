@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { CheckIsAdmin, CheckIsUser } from "../middlewares/auth";
+import { CheckIsAdmin, CheckIsUser } from "../auth";
 import { ProductServices } from "../services/index";
 import { BaseProduct, Product } from "../Entities/Product.entity";
 
@@ -10,12 +10,26 @@ router.get(
   CheckIsUser,
   CheckIsAdmin,
   async (req: Request, res: Response) => {
+    const filters = req.body;
+
     try {
-      const allProducts: Product[] = await ProductServices.getAll();
+      const allProducts: Product[] = await ProductServices.getAll(filters);
       return res.json(allProducts);
     } catch (e) {
       return res.status(500).send(e.message);
     }
+  }
+);
+
+router.get(
+  "/vista-test",
+  CheckIsUser,
+  CheckIsAdmin,
+  (req: Request, res: Response) => {
+    let cant = Math.abs(parseInt(req.query.cant as string));
+    if (isNaN(cant)) cant = 10;
+
+    return res.json(ProductServices.generateFakeProducts(cant));
   }
 );
 
@@ -27,7 +41,7 @@ router.get(
     const id: string = req.params.id;
 
     try {
-      const product: Product = await ProductServices.getById(id);
+      const product: Product | null = await ProductServices.getById(id);
 
       return product
         ? res.json(product)

@@ -10,9 +10,21 @@
 			"item": [
 				{
 					"name": "Get all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"price\": {\r\n        \"gt\": 100,\r\n        \"lt\": 1000\r\n    },\r\n    \"stock\": {\r\n        \"lt\": 100\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "localhost:8080/api/products/",
 							"host": [
@@ -34,7 +46,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/products/49702f00-e909-4ad6-bc65-fdd96b48e8a1",
+							"raw": "localhost:8080/api/products/02aeee3a-4598-494b-bf97-a566fc70bb93",
 							"host": [
 								"localhost"
 							],
@@ -42,7 +54,7 @@
 							"path": [
 								"api",
 								"products",
-								"49702f00-e909-4ad6-bc65-fdd96b48e8a1"
+								"02aeee3a-4598-494b-bf97-a566fc70bb93"
 							]
 						}
 					},

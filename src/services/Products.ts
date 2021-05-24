@@ -1,19 +1,24 @@
 import { BaseProduct, Product } from "../Entities/Product.entity";
 import { v4 as uuidv4 } from "uuid";
-import ProductList from "../db/Products";
-// import DBConnection from "../db/FilePersistence";
-// const ProductList = new DBConnection("ProductList.db");
+import Faker from "faker/locale/es";
 
-const products = [] as Product[];
+import { IProduct, Product as ProductModel } from "../models/Product";
+const hiddenFields = { _id: 0, __v: 0 };
 
-export const getAll = async (): Promise<Product[]> => {
-  const productList = (await ProductList.getAll()) as Product[];
-  return productList;
+
+export const getAll = async (filters?: Filters): Promise<Product[]> => {
+  const products: Array<IProduct> = await ProductModel.find(
+    { ...mapFiltersToMongo(filters) },
+    hiddenFields
+  );
+  return products;
 };
 
-export const getById = async (id: string): Promise<Product> => {
-  const product: Product = (await ProductList.getById(id)) as Product;
-
+export const getById = async (id: string): Promise<Product | null> => {
+  const product: IProduct | null = await ProductModel.findOne(
+    { id },
+    hiddenFields
+  );
   return product;
 };
 
@@ -24,20 +29,77 @@ export const create = async (body: BaseProduct): Promise<Product> => {
     id: uuidv4(),
   };
 
-  const createdProduct = (await ProductList.add(newProduct)) as Product;
-  if (!createdProduct) throw new Error("Can't save product in DB");
-
+  const createdProduct = await ProductModel.create(newProduct);
   return createdProduct;
 };
 
 export const update = async (
   id: string,
   body: BaseProduct
-): Promise<Product | undefined> => {
-  return await ProductList.update(id, body) as Product;
+): Promise<Product | null> => {
+  return await ProductModel.findOneAndUpdate({ id }, { $set: { ...body } });
 };
 
 export const deleteById = async (id: string): Promise<undefined> => {
-  if (!(await ProductList.delete(id))) throw new Error("Can't delete product");
+  await ProductModel.findOneAndDelete({ id });
   return;
+};
+
+function mapFiltersToMongo(filters: Filters | undefined): object {
+  if (!filters) return {};
+
+  let mongoQuery = {};
+
+  for (let [k, v] of Object.entries(filters)) {
+    if (k === "name") mongoQuery = { ...mongoQuery, [k]: v };
+    else if (k === "code") mongoQuery = { ...mongoQuery, [k]: v };
+    else if (["price", "stock"].includes(k))
+      mongoQuery = {
+        ...mongoQuery,
+        ...(Object.keys(v).includes("eq")
+          ? { [k]: { $eq: v.eq } }
+          : {
+              $and: Object.entries(v).reduce((numberQuery: Object[], curr) => {
+                return ["gt", "gte", "lt", "lte"].includes(curr[0])
+                  ? [...numberQuery, { [k]: { ["$" + curr[0]]: curr[1] } }]
+                  : numberQuery;
+              }, []),
+            }),
+      };
+  }
+
+  return mongoQuery;
+}
+export interface Filters {
+  name?: String;
+  code?: String;
+  price?: NumberFiltering;
+  stock?: NumberFiltering;
+}
+
+interface NumberFiltering {
+  gt?: Number;
+  gte?: Number;
+  lt?: Number;
+  lte?: Number;
+  eq?: Number;
+}
+
+export const generateFakeProducts = (q: number = 10): Product[] => {
+  const productArray: Product[] = [];
+
+  let iterate = Math.abs(q);
+  while (iterate--)
+    productArray.push({
+      code: Faker.commerce.product(),
+      description: Faker.commerce.productDescription(),
+      id: Faker.datatype.uuid(),
+      name: Faker.commerce.productName(),
+      price: Number(Faker.commerce.price(10, 1000, 2)),
+      stock: Faker.datatype.number({ precision: 0, min: 0, max: 300 }),
+      thumbnail: Faker.image.fashion(),
+      timestamp: String(Faker.datatype.datetime(Number(new Date()))),
+    });
+
+  return productArray;
 };

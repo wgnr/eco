@@ -1,1 +1,8 @@
+.env
+db
+db_redis
+dist
+logs
 node_modules
+stressTesting
+TODO.md
