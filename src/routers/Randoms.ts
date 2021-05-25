@@ -17,7 +17,7 @@ router.get("", async (req: Request, res: Response) => {
   } else {
     // https://github.com/TypeStrong/ts-node/issues/619#issuecomment-511366883
     const forkProcess = fork(randomNumberPath, [], {
-      execArgv: ["-r", "ts-node/register"],
+      // execArgv: ["-r", "ts-node/register"],
     });
 
     forkProcess.send(cant);

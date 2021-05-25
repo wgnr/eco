@@ -16,7 +16,6 @@ process.argv.slice(2).forEach((arg, i, arr) => {
   }
 });
 
-
 import cluster from "cluster";
 import { cpus } from "os";
 import { logger } from "./utils/logger";

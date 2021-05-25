@@ -44,7 +44,8 @@ app
     logger.logger.info(`✔ Server running at https://localhost:${PORT}`);
 
     mongoose
-      .connect("mongodb://localhost/ecommerce", {
+      // .connect("mongodb://localhost/ecommerce", {
+      .connect(process.env.MONGODB_URI!, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       })
