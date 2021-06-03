@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import passport from "passport";
 import { UserGetDTO } from "../models/User/User.get-dto";
+import { sendEmailOnEvent } from "../utils/email";
 
 const COOKIE_USERNAME_KEY = "user";
 export const router = express.Router();
@@ -41,6 +42,7 @@ router.post(
 );
 
 router.post("/logout", (req: Request, res: Response) => {
+  sendEmailOnEvent("ethereal", req.user?.email!, req.user?.firstname!, "logout");
   req.logOut();
   req.session!.destroy((err) => {
     if (err) return res.status(500).send("Error");

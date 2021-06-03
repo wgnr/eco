@@ -8,6 +8,13 @@ import {
 import { disposeEmitNodes } from "typescript";
 import { IUsers, IMUsers, User } from "../../models/User/Users";
 import { logger } from "../../utils/logger";
+import { sendEmailOnEvent } from "../../utils/email";
+
+const sendEmail = (user: IUsers) => {
+  const { photo } = user;
+  const { email, username } = user.social!.facebook!;
+  sendEmailOnEvent("ethereal", email!, username!, "login", photo);
+};
 
 passport.use(
   new FacebookStrategy(
@@ -49,9 +56,11 @@ passport.use(
               }
 
               logger.logger.info("User registration succesful");
+              sendEmail(newUser);
               return done(null, newUser);
             });
           } else {
+            sendEmail(user);
             return done(null, user);
           }
         }

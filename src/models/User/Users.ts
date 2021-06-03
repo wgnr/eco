@@ -8,7 +8,12 @@ export interface IUsers {
   lastname?: string;
   password?: string;
   photo?: string;
-  social?: object;
+  social?: {
+    facebook?: {
+      email?: string;
+      username?: string;
+    };
+  };
 }
 
 export interface IMUsers extends Document, IUsers {}
