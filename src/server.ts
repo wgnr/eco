@@ -11,6 +11,7 @@ import APIRouters from "./routers";
 import { checkIsAuthenticated } from "./auth/index";
 import compression from "compression";
 import { logger } from "./utils/logger";
+import { DBFactory, DBConnections } from "./db/DBFactory"
 
 const app: Application = express();
 const PORT = Number(process.env.PORT) || 8080;
@@ -42,14 +43,8 @@ app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
 app
   .listen(PORT, () => {
     logger.logger.info(`✔ Server running at https://localhost:${PORT}`);
-
-    mongoose
-      // .connect("mongodb://localhost/ecommerce", {
-      .connect(process.env.MONGODB_URI!, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      })
-      .then((r) => logger.logger.info(`✔ Connected to DB`))
+    DBFactory.connect(process.env.DB_STORAGE as DBConnections)
+      .then(() => logger.logger.info(`✔ Connected to DB`))
       .catch((e) => {
         logger.logger.error(e, `❌ Cannot connect to DB... exiting... `);
         process.exit();

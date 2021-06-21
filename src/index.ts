@@ -1,5 +1,8 @@
+
 import dotenv from "dotenv";
 dotenv.config();
+import { DBConnections } from "./db/DBFactory"
+
 // Get config from CLI
 process.argv.slice(2).forEach((arg, i, arr) => {
   if (arg === "--mode") {
@@ -13,6 +16,9 @@ process.argv.slice(2).forEach((arg, i, arr) => {
     process.env.DISABLE_CHILD_PROCESS = "1";
   } else if (arg === "--prevent-console-logger") {
     process.env.PREVENT_CONSOLE_LOGGER = "1";
+  } else if (arg === "--db") {
+    const connection = arr[i + 1]
+    process.env.DB_STORAGE = Object.values(DBConnections).includes(connection as DBConnections) ? connection : DBConnections.DEFAULT;
   }
 });
 
