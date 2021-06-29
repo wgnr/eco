@@ -1,14 +1,17 @@
+import { GlobalVars } from "../config"
 import { Request, Response } from "express";
 import { createWriteStream, mkdirSync, existsSync } from "fs";
 import { join } from "path";
 import pinoHttp from "pino-http";
 import pinoms from "pino-multi-stream";
 
+const { IS_PROD, logging: { PREVENT_CONSOLE_LOGGER } } = GlobalVars
+
 const logFoler = join(__dirname, "..", "logs");
 if (!existsSync(logFoler)) mkdirSync(logFoler, { recursive: true });
 
 const intialStreams =
-  process.env.NODE_ENV !== "production" && !process.env.PREVENT_CONSOLE_LOGGER
+  !IS_PROD && !PREVENT_CONSOLE_LOGGER
     ? [{ stream: process.stdout }]
     : [];
 

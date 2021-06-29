@@ -1,6 +1,7 @@
 import path from "path";
 __dirname = path.resolve();
 
+import { GlobalVars } from "./config"
 import express, { Request, Response, NextFunction, Application } from "express";
 import mongoose from "mongoose";
 import session from "express-session";
@@ -12,9 +13,9 @@ import { checkIsAuthenticated } from "./auth/index";
 import compression from "compression";
 import { logger } from "./utils/logger";
 import { DBFactory, DBConnections } from "./db/DBFactory"
+const { server: { PORT }, db: { DB_STORAGE } } = GlobalVars
 
 const app: Application = express();
-const PORT = Number(process.env.PORT) || 8080;
 
 logger.logger.info("Starting server...");
 app.use(compression());
@@ -43,7 +44,7 @@ app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
 app
   .listen(PORT, () => {
     logger.logger.info(`✔ Server running at https://localhost:${PORT}`);
-    DBFactory.connect(process.env.DB_STORAGE as DBConnections)
+    DBFactory.connect(DB_STORAGE as DBConnections)
       .then(() => logger.logger.info(`✔ Connected to DB`))
       .catch((e) => {
         logger.logger.error(e, `❌ Cannot connect to DB... exiting... `);

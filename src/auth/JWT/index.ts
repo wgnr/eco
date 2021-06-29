@@ -1,7 +1,8 @@
+import { GlobalVars } from "../../config"
 import { Request, Response, NextFunction } from "express";
 import bCrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-const tokenSecret = process.env.TOKEN_SECRET || "asdwqsddcvdf";
+const tokenSecret = GlobalVars.auth.TOKEN_SECRET;
 import { router } from "../../routers/Auth";
 import { User, IMUsers, IUsers } from "../../models/User/Users";
 import { UserCreateDTO } from "../../models/User/User.create-dto";

@@ -1,7 +1,8 @@
+import { GlobalVars } from "../config"
 import express, { Request, Response } from "express";
 
 export const router = express.Router();
-const { ADD_CONSOLELOG_INFO } = process.env;
+const { logging: { ADD_CONSOLELOG_INFO } } = GlobalVars;
 
 router.get("", async (req: Request, res: Response) => {
   const response = {

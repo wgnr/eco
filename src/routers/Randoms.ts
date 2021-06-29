@@ -1,9 +1,10 @@
+import { GlobalVars } from "../config"
 import express, { Request, Response } from "express";
 import { fork } from "child_process";
 
 export const router = express.Router();
 
-const { DISABLE_CHILD_PROCESS } = process.env;
+const { server: { DISABLE_CHILD_PROCESS } } = GlobalVars;
 const randomNumberPath = `${__dirname}/../utils/getRandomNumbers`;
 
 router.get("", async (req: Request, res: Response) => {

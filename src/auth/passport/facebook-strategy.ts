@@ -1,3 +1,4 @@
+import { GlobalVars } from "../../config"
 import { isArray } from "node:util";
 import passport from "passport";
 import {
@@ -10,6 +11,8 @@ import { IUsers, IMUsers, User } from "../../models/User/Users";
 import { logger } from "../../utils/logger";
 import { sendEmailOnEvent } from "../../utils/email";
 
+const { auth: { socials: { facebook: { FACEBOOK_APP_ID, FACEBOOK_APP_SECRET } } } } = GlobalVars
+
 const sendEmail = (user: IUsers) => {
   const { photo } = user;
   const { email, username } = user.social!.facebook!;
@@ -19,8 +22,8 @@ const sendEmail = (user: IUsers) => {
 passport.use(
   new FacebookStrategy(
     {
-      clientID: process.env.FACEBOOK_APP_ID || "",
-      clientSecret: process.env.FACEBOOK_APP_SECRET || "",
+      clientID: FACEBOOK_APP_ID || "",
+      clientSecret: FACEBOOK_APP_SECRET || "",
       callbackURL: "http://localhost:3000/api/auth/facebook/callback",
       profileFields: ["id", "displayName", "first_name", "email", "photos"],
     },

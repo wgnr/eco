@@ -1,4 +1,7 @@
-.env
+.env*
+!.env.development.example
+!.env.production.example
+!.env.example
 db
 db_redis
 dist

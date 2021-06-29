@@ -1,17 +1,26 @@
+import { GlobalVars } from "../config"
+
 // ETHEREAL
 // const nodemailer = require("nodemailer");
 import { createTransport, SendMailOptions, TransportOptions } from "nodemailer";
 import { logger } from "./logger";
 
+
 const {
-  ETHEREAL_EMAIL,
-  ETHEREAL_PASSWORD,
-  MAIL_USERNAME,
-  MAIL_PASSWORD,
-  OAUTH_CLIENTID,
-  OAUTH_CLIENT_SECRET,
-  OAUTH_REFRESH_TOKEN,
-} = process.env;
+  notifications: {
+    email: {
+      ETHEREAL_EMAIL,
+      ETHEREAL_PASSWORD,
+      gmail: {
+        MAIL_USERNAME,
+        MAIL_PASSWORD,
+        OAUTH_CLIENTID,
+        OAUTH_CLIENT_SECRET,
+        OAUTH_REFRESH_TOKEN,
+      }
+    }
+  }
+} = GlobalVars
 
 const transporterEthereal = createTransport({
   host: "smtp.ethereal.email",
@@ -75,9 +84,8 @@ export const sendEmailOnEvent = (
   event: "login" | "logout",
   imgUrl?: string
 ) => {
-  const text = `The user ${username} has logged ${
-    event === "login" ? "in" : "out"
-  } at ${new Date().toISOString()}.`;
+  const text = `The user ${username} has logged ${event === "login" ? "in" : "out"
+    } at ${new Date().toISOString()}.`;
 
   sendMail(provider, {
     to: toEmail,

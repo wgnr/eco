@@ -1,7 +1,14 @@
+import { GlobalVars } from "../config"
 import twilio from "twilio";
 import { logger } from "./logger";
 
-const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, SMS_ADMIN_ALERT } = process.env;
+const { notifications: {
+  sms: {
+    SMS_ADMIN_ALERT,
+    TWILIO_ACCOUNT_SID,
+    TWILIO_AUTH_TOKEN,
+  }
+} } = GlobalVars
 
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
